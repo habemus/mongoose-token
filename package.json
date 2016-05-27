@@ -1,0 +1,26 @@
+{
+  "name": "h-token",
+  "version": "0.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-istanbul": "^0.10.4",
+    "gulp-mocha": "^2.2.0",
+    "mongodb": "^2.1.20",
+    "should": "^8.4.0"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^7.0.0",
+    "lodash.pick": "^4.2.1",
+    "mongoose": "^4.4.19"
+  }
+}
