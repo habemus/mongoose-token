@@ -39,31 +39,15 @@ describe('hToken#revoke', function () {
 
   });
 
-  it('should require the decoded token to have jti field', function (done) {
-    var ht = hToken(H_TOKEN_OPTIONS);
-
-    // create a correctly signed token without jti
-    var token = jwt.sign({}, SECRET);
-
-    ht.revoke(token)
-      .then(() => {
-        done(new Error('should not allow token without jti'));
-      })
-      .catch((err) => {
-        err.should.be.instanceof(hToken.errors.InvalidTokenError);
-        done();
-      });
-  });
-
-  it('should require the token to be a string', function () {
+  it('should require the tokenId to be a string', function () {
     var ht = hToken(H_TOKEN_OPTIONS);
 
     assert.throws(function () {
       ht.revoke(null);
-    }, hToken.errors.InvalidTokenError);
+    }, TypeError);
   });
 
-  it('should revoke a JWT token', function (done) {
+  it('should revoke a JWT token by id', function (done) {
     var ht = hToken(H_TOKEN_OPTIONS);
 
     var payload = {
@@ -82,8 +66,10 @@ describe('hToken#revoke', function () {
         _token = token;
         token.should.be.a.String();
 
+        var decoded = jwt.decode(token);
+
         // revoke the token
-        return ht.revoke(token);
+        return ht.revoke(decoded.jti);
 
       })
       .then(() => {
