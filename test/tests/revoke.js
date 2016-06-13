@@ -39,7 +39,6 @@ describe('hToken#revoke', function () {
     aux.teardown().then(done);
   });
 
-
   it('should require the tokenId to be a string', function () {
     assert.throws(function () {
       ASSETS.ht.revoke(null);
