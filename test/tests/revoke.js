@@ -11,45 +11,42 @@ const mongoose = require('mongoose');
 const hToken = require('../../lib');
 
 // auxiliary
-const dbConn = require('../auxiliary/db-conn');
+const aux = require('../auxiliary');
 
 const SECRET = 'test-secret';
-const H_TOKEN_OPTIONS = {
-  mongooseConnection: dbConn.mongooseConnection,
-  tokenModelName: 'TestToken',
-  secret: SECRET,
-  issuer: 'test-issuer',
-};
 
 describe('hToken#revoke', function () {
 
+  var ASSETS;
+
   before(function (done) {
-    // drop database
-    dbConn.mongodbConn
-      .then((db) => {
-        return db.dropDatabase();
-      })
-      .then(() => {
+    aux.setup()
+      .then((assets) => {
+        ASSETS = assets;
+
+        ASSETS.ht = hToken({
+          mongooseConnection: ASSETS.mongooseConnection,
+          tokenModelName: 'TestToken',
+          secret: SECRET,
+          issuer: 'test-issuer'
+        });
+
         done();
-      })
-      .catch(done);
+      });
   });
 
-  after(function () {
-
+  after(function (done) {
+    aux.teardown().then(done);
   });
+
 
   it('should require the tokenId to be a string', function () {
-    var ht = hToken(H_TOKEN_OPTIONS);
-
     assert.throws(function () {
-      ht.revoke(null);
+      ASSETS.ht.revoke(null);
     }, TypeError);
   });
 
   it('should revoke a JWT token by id', function (done) {
-    var ht = hToken(H_TOKEN_OPTIONS);
-
     var payload = {
       someData: 'someValue'
     };
@@ -61,7 +58,7 @@ describe('hToken#revoke', function () {
     // store the token for later usage
     var _token;
 
-    ht.generate(payload, options)
+    ASSETS.ht.generate(payload, options)
       .then((token) => {
         _token = token;
         token.should.be.a.String();
@@ -69,13 +66,13 @@ describe('hToken#revoke', function () {
         var decoded = jwt.decode(token);
 
         // revoke the token
-        return ht.revoke(decoded.jti);
+        return ASSETS.ht.revoke(decoded.jti);
 
       })
       .then(() => {
 
         // attempting to verify the token throws error
-        return ht.verify(_token);
+        return ASSETS.ht.verify(_token);
       })
       .then(() => {
         done(new Error('should not be capable of decoding'))

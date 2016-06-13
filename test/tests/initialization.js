@@ -6,10 +6,10 @@ const mongoose = require('mongoose');
 const hToken = require('../../lib');
 
 // auxiliary
-const dbConn = require('../auxiliary/db-conn');
+const aux = require('../auxiliary');
 
 const REQUIRED_OPTIONS = {
-  mongooseConnection: dbConn.mongooseConnection,
+  mongooseConnection: mongoose.createConnection(aux.TEST_DB_URI),
   tokenModelName: 'TestToken',
   secret: 'fake-secret',
   issuer: 'test-issuer',

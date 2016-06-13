@@ -8,45 +8,43 @@ const jwt = require('jsonwebtoken');
 const hToken = require('../../lib');
 
 // auxiliary
-const dbConn = require('../auxiliary/db-conn');
+const aux = require('../auxiliary');
 
 const SECRET = 'test-secret';
-const H_TOKEN_OPTIONS = {
-  mongooseConnection: dbConn.mongooseConnection,
-  tokenModelName: 'TestToken',
-  secret: SECRET,
-  issuer: 'test-issuer',
-};
 
 describe('hToken#verify', function () {
 
-  before(function (done) {
-    // drop database
-    dbConn.mongodbConn
-      .then((db) => {
-        return db.dropDatabase();
-      })
-      .then(() => {
-        done();
-      })
-      .catch(done);
-  });
-  
-  after(function () {
+  var ASSETS;
 
+  before(function (done) {
+    aux.setup()
+      .then((assets) => {
+        ASSETS = assets;
+
+        ASSETS.ht = hToken({
+          mongooseConnection: ASSETS.mongooseConnection,
+          tokenModelName: 'TestToken',
+          secret: SECRET,
+          issuer: 'test-issuer'
+        });
+
+        done();
+      });
+  });
+
+  after(function (done) {
+    aux.teardown().then(done);
   });
 
   it('should require token to be a string', function () {
-    var ht = hToken(H_TOKEN_OPTIONS);
-
     assert.throws(function () {
-      ht.verify(false);
+      ASSETS.ht.verify(false);
     }, hToken.errors.InvalidTokenError);
   });
 
   it('should reject forged tokens', function (done) {
 
-    var ht = hToken(H_TOKEN_OPTIONS);
+    var ht = ASSETS.ht;
 
     var forgedToken = jwt.sign({ foo: 'bar' }, 'FORGED-SECRET');
 
@@ -63,7 +61,7 @@ describe('hToken#verify', function () {
   });
 
   it('should verify a JWT token', function (done) {
-    var ht = hToken(H_TOKEN_OPTIONS);
+    var ht = ASSETS.ht;
 
     var payload = {
       someData: 'someValue'

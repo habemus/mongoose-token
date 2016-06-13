@@ -8,37 +8,35 @@ const jwt = require('jsonwebtoken');
 const hToken = require('../../lib');
 
 // auxiliary
-const dbConn = require('../auxiliary/db-conn');
+const aux = require('../auxiliary');
 
 const SECRET = 'test-secret';
-const H_TOKEN_OPTIONS = {
-  mongooseConnection: dbConn.mongooseConnection,
-  tokenModelName: 'TestToken',
-  secret: SECRET,
-  issuer: 'test-issuer',
-};
 
 describe('hToken#generate', function () {
 
+  var ASSETS;
+
   before(function (done) {
-    // drop database
-    dbConn.mongodbConn
-      .then((db) => {
-        return db.dropDatabase();
-      })
-      .then(() => {
+    aux.setup()
+      .then((assets) => {
+        ASSETS = assets;
+
+        ASSETS.ht = hToken({
+          mongooseConnection: ASSETS.mongooseConnection,
+          tokenModelName: 'TestToken',
+          secret: SECRET,
+          issuer: 'test-issuer'
+        });
+
         done();
-      })
-      .catch(done);
+      });
   });
 
-  after(function () {
-
+  after(function (done) {
+    aux.teardown().then(done);
   });
 
   it('should generate a JWT token', function (done) {
-    var ht = hToken(H_TOKEN_OPTIONS);
-
     var payload = {
       someData: 'someValue'
     };
@@ -47,7 +45,7 @@ describe('hToken#generate', function () {
       subject: 'someone'
     };
 
-    ht.generate(payload, options)
+    ASSETS.ht.generate(payload, options)
       .then((token) => {
         token.should.be.a.String();
 
