@@ -19,7 +19,7 @@ describe('hToken#revoke', function () {
 
   var ASSETS;
 
-  before(function (done) {
+  beforeEach(function (done) {
     aux.setup()
       .then((assets) => {
         ASSETS = assets;
@@ -35,7 +35,7 @@ describe('hToken#revoke', function () {
       });
   });
 
-  after(function (done) {
+  afterEach(function (done) {
     aux.teardown().then(done);
   });
 
@@ -65,7 +65,7 @@ describe('hToken#revoke', function () {
         var decoded = jwt.decode(token);
 
         // revoke the token
-        return ASSETS.ht.revoke(decoded.jti);
+        return aux.ensureBluebird(ASSETS.ht.revoke(decoded.jti));
 
       })
       .then(() => {

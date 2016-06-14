@@ -16,7 +16,7 @@ describe('hToken#verify', function () {
 
   var ASSETS;
 
-  before(function (done) {
+  beforeEach(function (done) {
     aux.setup()
       .then((assets) => {
         ASSETS = assets;
@@ -32,7 +32,7 @@ describe('hToken#verify', function () {
       });
   });
 
-  after(function (done) {
+  afterEach(function (done) {
     aux.teardown().then(done);
   });
 
@@ -48,13 +48,14 @@ describe('hToken#verify', function () {
 
     var forgedToken = jwt.sign({ foo: 'bar' }, 'FORGED-SECRET');
 
-    ht.verify(forgedToken)
+    aux.ensureBluebird(ht.verify(forgedToken))
       .then((decoded) => {
         // should not happen!
         done(new Error('forgedToken was decoded'));
       })
       .catch((err) => {
         err.should.be.instanceof(hToken.errors.InvalidTokenError);
+        err.reason.should.equal('InvalidSignature');
         done();
       });
 
@@ -75,7 +76,7 @@ describe('hToken#verify', function () {
       .then((token) => {
         token.should.be.a.String();
 
-        return ht.verify(token)
+        return aux.ensureBluebird(ht.verify(token))
 
       })
       .then((decoded) => {
@@ -113,7 +114,9 @@ describe('hToken#verify', function () {
       .then((token) => {
         token.should.be.a.String();
 
-        return ht.verify(token)
+        return aux.ensureBluebird(
+          ht.verify(token)
+        );
 
       })
       .then(() => {
@@ -121,6 +124,7 @@ describe('hToken#verify', function () {
       }, (err) => {
         err.should.be.instanceof(hToken.errors.InvalidTokenError);
         err.name.should.equal('InvalidTokenError');
+        err.reason.should.equal('InvalidIssuer');
 
         done();
       })

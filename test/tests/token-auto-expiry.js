@@ -19,7 +19,7 @@ describe('hToken token db auto-expiry', function () {
 
   var ASSETS;
 
-  before(function (done) {
+  beforeEach(function (done) {
     aux.setup()
       .then((assets) => {
         ASSETS = assets;
@@ -36,7 +36,7 @@ describe('hToken token db auto-expiry', function () {
       .catch(done);
   });
 
-  after(function (done) {
+  afterEach(function (done) {
     aux.teardown().then(done);
   });
 
@@ -101,7 +101,7 @@ describe('hToken token db auto-expiry', function () {
                 clearInterval(interval);
                 done();
               } else {
-                console.log(attemptCount + ') ' + attemptCount * 5 + 'seconds: found ' + dbTokens.length);
+                console.log(attemptCount + ') ' + attemptCount * 5 + ' seconds: found ' + dbTokens.length);
               }
             });
 
