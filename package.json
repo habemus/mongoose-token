@@ -19,6 +19,7 @@
     "should": "^8.4.0"
   },
   "dependencies": {
+    "bluebird": "^3.4.0",
     "jsonwebtoken": "^7.0.0",
     "lodash.pick": "^4.2.1",
     "mongoose": "^4.4.19",

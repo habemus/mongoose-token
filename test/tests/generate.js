@@ -29,7 +29,8 @@ describe('hToken#generate', function () {
         });
 
         done();
-      });
+      })
+      .catch(done);
   });
 
   after(function (done) {
