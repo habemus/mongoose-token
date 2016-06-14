@@ -1,0 +1,1 @@
+- decide over a manner of erroring: return Bluebird.reject or throw error

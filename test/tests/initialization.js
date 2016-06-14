@@ -13,6 +13,7 @@ const REQUIRED_OPTIONS = {
   tokenModelName: 'TestToken',
   secret: 'fake-secret',
   issuer: 'test-issuer',
+  defaultTokenExpiry: '1h',
 };
 
 function clone(obj) {
@@ -58,6 +59,15 @@ describe('initialization', function () {
   it('should require issuer option', function () {
     var options = clone(REQUIRED_OPTIONS);
     delete options.issuer;
+
+    assert.throws(function () {
+      var ht = hToken(options);
+    });
+  });
+
+  it('should require defaultTokenExpiry option', function () {
+    var options = clone(REQUIRED_OPTIONS);
+    delete options.defaultTokenExpiry;
 
     assert.throws(function () {
       var ht = hToken(options);

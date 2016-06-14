@@ -25,7 +25,9 @@ describe('hToken#verify', function () {
           mongooseConnection: ASSETS.mongooseConnection,
           tokenModelName: 'TestToken',
           secret: SECRET,
-          issuer: 'test-issuer'
+          issuer: 'test-issuer',
+          // 1000 seconds
+          defaultTokenExpiry: 1000,
         });
 
         done();
@@ -99,7 +101,9 @@ describe('hToken#verify', function () {
       mongooseConnection: ASSETS.mongooseConnection,
       tokenModelName: 'AnotherTestToken',
       secret: SECRET,
-      issuer: 'another-test-issuer'
+      issuer: 'another-test-issuer',
+      // 1000 seconds
+      defaultTokenExpiry: 1000,
     });
 
     var payload = {
@@ -129,5 +133,26 @@ describe('hToken#verify', function () {
         done();
       })
       .catch(done);
+  });
+
+  it('should reject malformed tokens', function (done) {
+
+    var ht = ASSETS.ht;
+
+    // remove the starting 50 characters
+    var malformedToken = jwt.sign({ foo: 'bar' }, SECRET);
+    malformedToken = malformedToken.substr(50, malformedToken.length);
+
+    aux.ensureBluebird(ht.verify(malformedToken))
+      .then((decoded) => {
+        // should not happen!
+        done(new Error('malformedToken was decoded'));
+      })
+      .catch((err) => {
+        err.should.be.instanceof(hToken.errors.InvalidTokenError);
+        err.reason.should.equal('MalformedJWT');
+        done();
+      });
+
   });
 });

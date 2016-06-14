@@ -28,7 +28,9 @@ describe('hToken token db auto-expiry', function () {
           mongooseConnection: ASSETS.mongooseConnection,
           tokenModelName: 'TestToken',
           secret: SECRET,
-          issuer: 'test-issuer'
+          issuer: 'test-issuer',
+          // 1000 seconds
+          defaultTokenExpiry: 1000,
         });
 
         done();

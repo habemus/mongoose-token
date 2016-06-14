@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 
+const ObjectId = mongoose.Types.ObjectId;
+
 // lib
 const hToken = require('../../lib');
 
@@ -28,7 +30,9 @@ describe('hToken#revoke', function () {
           mongooseConnection: ASSETS.mongooseConnection,
           tokenModelName: 'TestToken',
           secret: SECRET,
-          issuer: 'test-issuer'
+          issuer: 'test-issuer',
+          // 1000 seconds
+          defaultTokenExpiry: 1000,
         });
 
         done();
@@ -43,6 +47,20 @@ describe('hToken#revoke', function () {
     assert.throws(function () {
       ASSETS.ht.revoke(null);
     }, TypeError);
+  });
+
+  it('should refuse to revoke a token that does not exist', function (done) {
+    var fakeJTI = new ObjectId();
+
+    ASSETS.ht.revoke(fakeJTI)
+      .then(() => {
+        done(new Error('error expected'));
+      }, (err) => {
+        err.should.be.instanceof(hToken.errors.InexistentToken);
+
+        done();
+      })
+      .catch(done);
   });
 
   it('should revoke a JWT token by id', function (done) {
