@@ -155,4 +155,28 @@ describe('hToken#verify', function () {
       });
 
   });
+
+  it('should reject expired tokens', function (done) {
+    this.timeout(5000);
+
+    var ht = ASSETS.ht;
+
+    // remove the starting 50 characters
+    var expiredToken = jwt.sign({ foo: 'bar' }, SECRET, {
+      expiresIn: '1s',
+    });
+
+    setTimeout(function () {
+
+      ht.verify(expiredToken).then((decoded) => {
+        done(new Error('expected error'));
+      })
+      .catch((err) => {
+        err.should.be.instanceof(hToken.errors.InvalidTokenError);
+        err.reason.should.equal('TokenExpired');
+        done();
+      });
+
+    }, 2000);
+  });
 });
