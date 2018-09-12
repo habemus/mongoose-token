@@ -5,7 +5,6 @@ const should = require('should');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const ora = require('ora');
 
 // lib
 const hToken = require('../../lib');
