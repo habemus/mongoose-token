@@ -83,7 +83,7 @@ describe('hToken#revoke', function () {
         var decoded = jwt.decode(token);
 
         // revoke the token
-        return aux.ensureBluebird(ASSETS.ht.revoke(decoded.jti));
+        return aux.ensurePromise(ASSETS.ht.revoke(decoded.jti));
 
       })
       .then(() => {

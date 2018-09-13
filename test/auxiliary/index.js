@@ -2,7 +2,6 @@
 const should = require('should');
 const MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
-const Bluebird = require('bluebird');
 
 // constant
 const TEST_DB_URI = 'mongodb://localhost:27017/h-token-test-db';
@@ -79,16 +78,16 @@ exports.teardown = function () {
 
 /**
  * Simply checks that the given promise
- * is an instance of Bluebird
+ * is an instance of Promise
  *
  * and return the promise itself
  *
  * Throw a custom method so that it is easier to be idenetified in the test suites
  */
-exports.ensureBluebird = function (p) {
+exports.ensurePromise = function (p) {
 
-  if (!(p instanceof Bluebird)) {
-    throw new TypeError('promise is not an instance of Bluebird promise');
+  if (!(p instanceof Promise)) {
+    throw new TypeError('promise is not an instance of Promise promise');
   }
 
   return p;

@@ -50,7 +50,7 @@ describe('hToken#verify', function () {
 
     var forgedToken = jwt.sign({ foo: 'bar' }, 'FORGED-SECRET');
 
-    aux.ensureBluebird(ht.verify(forgedToken))
+    aux.ensurePromise(ht.verify(forgedToken))
       .then((decoded) => {
         // should not happen!
         done(new Error('forgedToken was decoded'));
@@ -78,7 +78,7 @@ describe('hToken#verify', function () {
       .then((token) => {
         token.should.be.a.String();
 
-        return aux.ensureBluebird(ht.verify(token))
+        return aux.ensurePromise(ht.verify(token))
 
       })
       .then((decoded) => {
@@ -118,7 +118,7 @@ describe('hToken#verify', function () {
       .then((token) => {
         token.should.be.a.String();
 
-        return aux.ensureBluebird(
+        return aux.ensurePromise(
           ht.verify(token)
         );
 
@@ -143,7 +143,7 @@ describe('hToken#verify', function () {
     var malformedToken = jwt.sign({ foo: 'bar' }, SECRET);
     malformedToken = malformedToken.substr(50, malformedToken.length);
 
-    aux.ensureBluebird(ht.verify(malformedToken))
+    aux.ensurePromise(ht.verify(malformedToken))
       .then((decoded) => {
         // should not happen!
         done(new Error('malformedToken was decoded'));

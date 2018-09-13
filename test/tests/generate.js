@@ -1,12 +1,12 @@
 const assert = require('assert');
+const { promisify } = require('util')
 
 // third-party dependencies
 const should = require('should');
-const Bluebird = require('bluebird');
 const jwt = require('jsonwebtoken');
 const ms  = require('ms');
 
-const _jwtVerify = Bluebird.promisify(jwt.verify);
+const _jwtVerify = promisify(jwt.verify);
 
 // lib
 const hToken = require('../../lib');
@@ -58,7 +58,7 @@ describe('hToken#generate', function () {
       subject: 'someone'
     };
 
-    aux.ensureBluebird(ASSETS.ht.generate(payload, options))
+    aux.ensurePromise(ASSETS.ht.generate(payload, options))
       .then((token) => {
         token.should.be.a.String();
 
@@ -108,7 +108,7 @@ describe('hToken#generate', function () {
     var _token;
 
 
-    aux.ensureBluebird(ASSETS.ht.generate(payload, options))
+    aux.ensurePromise(ASSETS.ht.generate(payload, options))
       .then((token) => {
         _token = token;
         token.should.be.a.String();
@@ -167,7 +167,7 @@ describe('hToken#generate', function () {
     var _token;
 
 
-    aux.ensureBluebird(ASSETS.ht.generate(payload, options))
+    aux.ensurePromise(ASSETS.ht.generate(payload, options))
       .then((token) => {
         _token = token;
         token.should.be.a.String();
@@ -206,7 +206,7 @@ describe('hToken#generate', function () {
 
     var options = {};
 
-    aux.ensureBluebird(ASSETS.ht.generate(payload, options))
+    aux.ensurePromise(ASSETS.ht.generate(payload, options))
       .then((token) => {
         done(new Error('error expected'));
       }, (err) => {
@@ -231,7 +231,7 @@ describe('hToken#generate', function () {
       notBefore: '1s',
     };
 
-    aux.ensureBluebird(ASSETS.ht.generate(payload, options))
+    aux.ensurePromise(ASSETS.ht.generate(payload, options))
       .then((token) => {
         return ASSETS.db.collection('testtokens').find().toArray();
       })
@@ -264,7 +264,7 @@ describe('hToken#generate', function () {
       subject: 'someone'
     };
 
-    aux.ensureBluebird(ASSETS.ht.generate(undefined, options))
+    aux.ensurePromise(ASSETS.ht.generate(undefined, options))
       .then((token) => {
         token.should.be.a.String();
 

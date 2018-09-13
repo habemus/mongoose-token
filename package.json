@@ -1,6 +1,6 @@
 {
-  "name": "h-token",
-  "version": "0.1.1",
+  "name": "@habemus/h-token",
+  "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
   "directories": {
@@ -19,11 +19,9 @@
     "should": "^8.4.0"
   },
   "dependencies": {
-    "bluebird": "^3.4.0",
     "jsonwebtoken": "^8.3.0",
-    "lodash.pick": "^4.2.1",
+    "lodash.pick": "^4.4.0",
     "mongoose": "^4.4.19",
-    "ms": "^0.7.1",
-    "node-uuid": "^1.4.7"
+    "ms": "^2.1.1"
   }
 }
