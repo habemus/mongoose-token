@@ -1,8 +1,12 @@
 {
-  "name": "@habemus/h-token",
+  "name": "@habemus/mongoose-token",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:habemus/mongoose-token.git"
+  },
   "directories": {
     "test": "test"
   },
